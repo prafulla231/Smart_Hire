@@ -5,7 +5,7 @@ const getAllcandidates = asyncHandler(async (req, res) => {
     try {
         // Use the promise-based query method correctly
         const [data] = await db.query(
-            'select * from users'
+            'select * from users inner join student_info on users.user_id = student_info.user_id'
             // 'SELECT * FROM users AS u INNER JOIN Student_Info AS s ON u.user_id = s.user_id'
         );
 

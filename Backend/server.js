@@ -104,7 +104,7 @@ const colors = require('colors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const pool = require('./db/db.js');  // Import connection pool from db.js
-
+const RecruiterRoutes = require('./routes/RecruiterRoutes.js');
 dotenv.config({ path: '../.env' });  // Adjust path if needed
 
 // Initialize Express
@@ -116,26 +116,10 @@ app.use(morgan('dev'));    // Log requests
 
 //Routes
 app.use('/api/v1/candidates', require('./routes/studentRoutes.js'));
+app.use('/api/v1/recruiters', require('./routes/RecruiterRoutes.js'));
+app.use ('/api/v1/users', require('./routes/userRoutes.js'));
 
-app.get('/students', async (req, res) => {
-    try {
-        // Fetch data from the 'student' table using connection pool
-        const [rows] = await pool.query('SELECT * FROM student');
-        res.status(200).json({
-            success: true,
-            data: rows,
-        });
 
-        console.log("Students data:", rows);
-    } catch (error) {
-        console.error("Error fetching students data".bgRed, error);
-        res.status(500).json({
-            success: false,
-            message: "Error fetching students data",
-            error: error.message,
-        });
-    }
-});
 
 // Server port
 const port = process.env.PORT || 8080;
@@ -156,7 +140,7 @@ const startServer = async () => {
         // Check the connection by running a simple query
         const [databases] = await pool.query('SHOW DATABASES;');
         console.log("Connected to the database successfully".bgGreen);
-        console.log("Available Databases:".bgBlue, databases);
+        // console.log("Available Databases:".bgBlue, databases);
 
         // Start the server after successful DB connection
         app.listen(port, () => {
